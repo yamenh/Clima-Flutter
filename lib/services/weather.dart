@@ -1,4 +1,33 @@
+import 'package:clima/services/location.dart';
+import 'package:clima/services/networking.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter/material.dart';
+
+const apiKey = 'b62f7a047f1ec24e36ed6d37cac1ef5f';
+const openWeatherMapURL = 'https://api.openweathermap.org/data/2.5/weather';
 class WeatherModel {
+
+
+  Future<dynamic> getCityWeather(String cityName) async{
+    var url = '$openWeatherMapURL?q=$cityName&appid=$apiKey&units=metric';
+    NetworkHelper networkHelper = NetworkHelper(url);
+
+    var weatherData =await networkHelper.getData();
+    return weatherData;
+  }
+
+  Future<dynamic> getLocationWeather()async {
+    Location location = Location();
+    await location.getCurrentLocation();
+
+    NetworkHelper networkHelper = NetworkHelper(
+        '$openWeatherMapURL?lat=${location.latitude}&lon=${location.longitude}&appid=$apiKey&units=metric');
+
+    var weatherData = await networkHelper.getData();
+    return weatherData;
+
+  }
+  
   String getWeatherIcon(int condition) {
     if (condition < 300) {
       return '🌩';
